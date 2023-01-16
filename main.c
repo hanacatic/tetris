@@ -37,10 +37,20 @@ void __interrupt() interr(){
     if(TMR0IE && TMR0IF){
         counter = counter + 1;
     }
+    if (INTE && INTF){
+        INTF =0;
+        RD0 = 1 - RD0;
+        
+    }
+    
 }
 
 //interrupt initialisation
 void interr_init(){
+    //config of interrupt on change
+    INTF=0;
+    INTEDG=1;
+    INTE=1;
     //configuration of TMR0 timer
     TMR0CS = 0;
     TMR0IF = 0;
@@ -52,6 +62,13 @@ void interr_init(){
     TMR0 = 133;
     TMR0IE = 1;
     GIE = 1;
+}
+void port_init(void){
+    TRISB=0xB1; // 1000 0001 
+    ANSELB=0; 
+    PORTB=0;
+    TRISD = 0xFE;
+
 }
 void main(void) {
     interr_init();
