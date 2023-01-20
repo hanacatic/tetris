@@ -40,6 +40,7 @@ void __interrupt() interr(){
     if (INTE && INTF){
         INTF =0;
         RD0 = 1 - RD0;
+        RB1 = 1 - RB1;
         
     }
     
@@ -67,11 +68,14 @@ void port_init(void){
     TRISB=0xB1; // 1000 0001 
     ANSELB=0; 
     PORTB=0;
-    TRISD = 0xFE;
+    TRISD = 0x00;
+    PORTD = 0;
+    ANSELD = 0;
 
 }
 void main(void) {
     interr_init();
+    port_init();
     srand(5198);
  
     while(1){
