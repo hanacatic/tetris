@@ -6,10 +6,10 @@
 #pragma config IESO=OFF,FCMEN=OFF,WRT=OFF,VCAPEN=OFF,PLLEN=OFF,STVREN=OFF,LVP=OFF
 #define _XTAL_FREQ 8000000
 
-char matrix[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-char matrix_row = 3;
-char fig_bin_array[4] = {0,0,0,0};
-char brojac =0;
+unsigned char matrix[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+unsigned char matrix_row = 3;
+unsigned char fig_bin_array[4] = {0,0,0,0};
+unsigned char brojac =0;
 
 void update_led(void){
     //Set LED states according to main matrix named 'matrix'.
