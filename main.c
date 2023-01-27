@@ -1,63 +1,62 @@
 #include <xc.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
+#include "max7219_driver.h"
+#include "figure.h"
 
 #pragma config FOSC=HS,WDTE=OFF,PWRTE=OFF,MCLRE=ON,CP=OFF,CPD=OFF,BOREN=OFF,CLKOUTEN=OFF
 #pragma config IESO=OFF,FCMEN=OFF,WRT=OFF,VCAPEN=OFF,PLLEN=OFF,STVREN=OFF,LVP=OFF
-
 #define _XTAL_FREQ 8000000
 
-int a = 0;
-unsigned char counter = 0;
+char matrix[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+char matrix_row = 3;
+char fig_bin_array[4] = {0,0,0,0};
+char brojac =0;
 
-const char figures[7][4] = {
-    {1, 3, 5, 7}, // I
-    {2, 4, 5, 7}, // 4
-    {3, 5, 4, 6}, // N
-    {3, 5, 4, 7}, // T
-    {2, 3, 5, 7}, // L
-    {3, 5, 7, 6}, // J
-    {2, 3, 4, 5}, // O
-};
-
-struct Point{
-    char x, y;
-};
-
-//moves figure in x axis depending on dx, dx > 0 RIGHT, dx < 0 LEFT
-void moveFig(struct Point* figure, char dx){
-    for(int i = 0; i < 4; i++){
-        figure[i].x = figure[i].x + dx;
+void update_led(void){
+    //Set LED states according to main matrix named 'matrix'.
+    for(char i = 0; i<8; i++){
+        MAX7219_send(8-i, matrix[4+i]);
+        MAX7219_send(8-i, matrix[12+i]);
+        MAX7219_update();
     }
 }
 
-//interrupt routine
-void __interrupt() interr(){
-    if(TMR0IE && TMR0IF){
-        counter = counter + 1;
+
+void __interrupt() prekid(void){
+    if(TMR0IF && TMR0IE){
+        INTCONbits.TMR0IF = 0;
+        TMR0 = 180;
+        if (brojac == 100){
+            if(can_go_further(matrix, &matrix_row)){
+                go_down_1place(matrix, &matrix_row, fig_bin_array); update_led();
+            }
+            else{
+                matrix_row = 3; prepare_new_figure(matrix, fig_bin_array);
+            }
+             brojac = 0;
+        }
+        brojac++;
+        
     }
 }
 
-//interrupt initialisation
-void interr_init(){
-    //configuration of TMR0 timer
-    TMR0CS = 0;
-    TMR0IF = 0;
-    //using prescaler and setting TMR value to measure time in 1ms
-    PSA = 0;
-    PS0 = 1;
-    PS1 = 0;
-    PS2 = 1;
-    TMR0 = 133;
-    TMR0IE = 1;
-    GIE = 1;
+void tmr0_initialization(void){
+    //setting TMR0 time to 5 ms.
+    OPTION_REGbits.PS2 = 1;
+    OPTION_REGbits.PS1 = 1;
+    OPTION_REGbits.PS0 = 0;
+    OPTION_REGbits.PSA = 0;
+    OPTION_REGbits.TMR0CS = 0;
+    TMR0 = 180;
+    INTCONbits.TMR0IE = 1;
+    INTCONbits.GIE = 1;
 }
-void main(void) {
-    interr_init();
-    srand(5198);
- 
-    while(1){
-        a = rand() % 7;
-    }
+void main (void) {
+    TRISD = 0b11100000;
+    prepare_new_figure(matrix, fig_bin_array);
+    MAX7219_initialization();
+	tmr0_initialization();
+    // main loop
+    while (1);
+    
+    return;
 }
