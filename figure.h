@@ -4,6 +4,7 @@
 
 #include <xc.h> 
 
+
 /**
     <p><b>Function prototype: </b>char random_number(char max_number);</p>
   
@@ -25,7 +26,6 @@
     <p><b>Remarks: </b>Function returns pseudorandom number</p>
  */
 char random_number(char max_number);
-
 
 
 
@@ -95,7 +95,7 @@ void prepare_new_figure(char* matrix, char* fig_bin_array);
 
     <p><b>Remarks:</b></p>
  */
-__bit can_go_further(char* matrix, char* matrix_row);
+__bit can_go_further(char* matrix, char* matrix_row, char* fig_bin_array);
 
 
 /**
@@ -120,7 +120,13 @@ __bit can_go_further(char* matrix, char* matrix_row);
  */
 void go_down_1place(char* matrix, char* matrix_row, char* fig_bin_array);
 
+void go_left(char* matrix, char* matrix_row, char* fig_bin_array);
 
+void go_right(char* matrix, char* matrix_row, char* fig_bin_array);
+
+__bit can_go_left(char* matrix, char* matrix_row, char* fig_bin_array);
+
+__bit can_go_right(char* matrix, char* matrix_row, char* fig_bin_array);
 
 #endif	/* XC_HEADER_TEMPLATE_H */
 
