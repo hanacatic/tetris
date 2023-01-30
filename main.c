@@ -11,6 +11,7 @@ char matrix_row = 3;
 char fig_bin_array[4] = {0,0,0,0};
 char brojac =0;
 
+char desno = 0;
 void update_led(void){
     //Set LED states according to main matrix named 'matrix'.
     for(char i = 0; i<8; i++){
@@ -26,7 +27,10 @@ void __interrupt() prekid(void){
         INTCONbits.TMR0IF = 0;
         TMR0 = 180;
         if (brojac == 100){
-            if(can_go_further(matrix, &matrix_row)){
+            if(can_go_further(matrix, &matrix_row, fig_bin_array)){
+                if(desno++ < 7){
+                    go_right(matrix, &matrix_row, fig_bin_array);
+                }
                 go_down_1place(matrix, &matrix_row, fig_bin_array); update_led();
             }
             else{
@@ -60,3 +64,4 @@ void main (void) {
     
     return;
 }
+
