@@ -41,6 +41,32 @@ void __interrupt() prekid(void){
         brojac++;
         
     }
+    if(IOCBP0&&IOCBF0){        
+        IOCBF0 = 0;
+        //do something to start the game
+        
+    }
+    if(IOCBP1&&IOCBF1){
+        IOCBF1 = 0;
+        go_left(matrix, &matrix_row, fig_bin_array);
+                
+    }
+    if(IOCBP2&&IOCBF2){
+        IOCBF2 = 0;
+        go_right(matrix, &matrix_row, fig_bin_array);
+                
+    }
+    if(IOCBP3&&IOCBF3){
+        IOCBF3 = 0;
+        go_down_1place(matrix, &matrix_row, fig_bin_array);                        
+    }
+    if(IOCBP4&&IOCBF4){
+        IOCBF4 = 0;
+        rotate(matrix, &matrix_row, fig_bin_array);                        
+    }
+    
+    
+    
 }
 
 void tmr0_initialization(void){
@@ -54,14 +80,29 @@ void tmr0_initialization(void){
     INTCONbits.TMR0IE = 1;
     INTCONbits.GIE = 1;
 }
+void ioc_initialization(void){
+ IOCBP0=1; // Omogucavanje prekida na rastucu ivicu na RB0 - Start
+ IOCBF0=0;
+ IOCBP1=1; // Omogucavanje prekida na rastucu ivicu na RB1 - Left
+ IOCBF1=0;
+ IOCBP2=1; // Omogucavanje prekida na rastucu ivicu na RB2 - Right
+ IOCBF2=0;
+ IOCBP3=1; //Omogucavanje prekida na rastucu ivicu na RB3 - drop down
+ IOCBF3=0;
+ IOCBP4=1; //Omogucavanje prekida na rastucu ivicu na RB4 - rotate
+ IOCBF4=0; 
+ IOCIF=0;
+ IOCIE=1;
+ GIE=1;
+}
 void main (void) {
     TRISD = 0b11100000;
     prepare_new_figure(matrix, fig_bin_array);
     MAX7219_initialization();
 	tmr0_initialization();
+    ioc_initialization();
     // main loop
     while (1);
     
     return;
 }
-
