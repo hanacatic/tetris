@@ -87,3 +87,6 @@ void go_left(char* matrix, char* matrix_row, char* fig_bin_array){
         }
     }
 }
+
+void rotate(char* matrix, char* matrx_row, char* fig_bin_array){
+}
