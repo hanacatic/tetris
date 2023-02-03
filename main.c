@@ -8,10 +8,10 @@
 
 char matrix[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 char matrix_row = 3;
+char matrix_col = 3;
 char fig_bin_array[4] = {0,0,0,0};
 char brojac =0;
 
-char desno = 0;
 void update_led(void){
     //Set LED states according to main matrix named 'matrix'.
     for(char i = 0; i<8; i++){
@@ -28,9 +28,6 @@ void __interrupt() prekid(void){
         TMR0 = 180;
         if (brojac == 100){
             if(can_go_further(matrix, &matrix_row, fig_bin_array)){
-                if(desno++ < 7){
-                    go_right(matrix, &matrix_row, fig_bin_array);
-                }
                 go_down_1place(matrix, &matrix_row, fig_bin_array); update_led();
             }
             else{
@@ -39,31 +36,44 @@ void __interrupt() prekid(void){
              brojac = 0;
         }
         brojac++;
-        
     }
-    if(IOCBP0&&IOCBF0){        
+    
+    if(IOCBN0&&IOCBF0){        
         IOCBF0 = 0;
+        IOCIF=0;
         //do something to start the game
         
     }
-    if(IOCBP1&&IOCBF1){
+    if(IOCBN1&&IOCBF1){
         IOCBF1 = 0;
-        go_left(matrix, &matrix_row, fig_bin_array);
+        IOCIF=0;
+        PORTDbits.RD7 = !PORTDbits.RD7;
+        go_left(matrix, &matrix_row, &matrix_col, fig_bin_array);
                 
     }
-    if(IOCBP2&&IOCBF2){
+    if(IOCBN2&&IOCBF2){
         IOCBF2 = 0;
-        go_right(matrix, &matrix_row, fig_bin_array);
+        IOCIF=0;
+        PORTDbits.RD7 = !PORTDbits.RD7;
+        go_right(matrix, &matrix_row, &matrix_col, fig_bin_array);
                 
     }
-    if(IOCBP3&&IOCBF3){
+    if(IOCBN3&&IOCBF3){
         IOCBF3 = 0;
+        IOCIF=0;
         go_down_1place(matrix, &matrix_row, fig_bin_array);                        
     }
-    if(IOCBP4&&IOCBF4){
+    if(IOCBN4&&IOCBF4){
         IOCBF4 = 0;
-        rotate(matrix, &matrix_row, fig_bin_array);                        
+        IOCIF=0;
+        PORTDbits.RD7 = !PORTDbits.RD7;
+        rotate(matrix, &matrix_row, &matrix_col, fig_bin_array);                        
     }
+    if(INTE && INTF){
+        PORTDbits.RD7 = !PORTDbits.RD7;
+        INTF = 0;
+    }
+    
     
     
     
@@ -78,29 +88,39 @@ void tmr0_initialization(void){
     OPTION_REGbits.TMR0CS = 0;
     TMR0 = 180;
     INTCONbits.TMR0IE = 1;
-    INTCONbits.GIE = 1;
+    //INTCONbits.GIE = 1;
 }
 void ioc_initialization(void){
- IOCBP0=1; // Omogucavanje prekida na rastucu ivicu na RB0 - Start
+ IOCBN0=1; // Omogucavanje prekida na rastucu ivicu na RB0 - Start
  IOCBF0=0;
- IOCBP1=1; // Omogucavanje prekida na rastucu ivicu na RB1 - Left
+ IOCBN1=1; // Omogucavanje prekida na rastucu ivicu na RB1 - Left
  IOCBF1=0;
- IOCBP2=1; // Omogucavanje prekida na rastucu ivicu na RB2 - Right
+ IOCBN2=1; // Omogucavanje prekida na rastucu ivicu na RB2 - Right
  IOCBF2=0;
- IOCBP3=1; //Omogucavanje prekida na rastucu ivicu na RB3 - drop down
+ IOCBN3=1; //Omogucavanje prekida na rastucu ivicu na RB3 - drop down
  IOCBF3=0;
- IOCBP4=1; //Omogucavanje prekida na rastucu ivicu na RB4 - rotate
+ IOCBN4=1; //Omogucavanje prekida na rastucu ivicu na RB4 - rotate
  IOCBF4=0; 
  IOCIF=0;
  IOCIE=1;
  GIE=1;
 }
+
 void main (void) {
-    TRISD = 0b11100000;
+    
+    TRISB = 0xFF;
+    PORTB = 0x00;
+    TRISD = 0b00000000;
+    PORTD = 0x00;
+    ANSELD = 0x00;
+    ANSELB = 0x00;
+    PORTDbits.RD7 = 1;
+    tmr0_initialization();
+    ioc_initialization();
     prepare_new_figure(matrix, fig_bin_array);
     MAX7219_initialization();
-	tmr0_initialization();
-    ioc_initialization();
+    
+	
     // main loop
     while (1);
     
