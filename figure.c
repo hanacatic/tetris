@@ -15,6 +15,7 @@ const char figures[7][4] =
 };
  
 char a = 4;
+char temp = 0, pow;
 
 char random_number(char max_number){
         srand((a)); 
@@ -91,17 +92,18 @@ void go_left(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_arr
 }
 __bit can_rotate(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_array){
     if(!*matrix_col && fig_bin_array[1]) return 0;
+    return 1;
 }
 void rotate(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_array){
     if(can_rotate(matrix, matrix_row, matrix_col, fig_bin_array)){
-        char temp = 0, pow;
-        for(char i=0; i<4; i++){
+        for(char i=0; i < 4; i++){
+            temp = 0;
             matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]);
         }
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 4; j++){
                 temp = temp * 2;
-                temp = temp | ((fig_bin_array[j] & (1 << ((*matrix_col) + i))) << 0);
+                temp = temp | (fig_bin_array[j] & (1 << ((*matrix_col) + i)));
             }
             pow = *matrix_col;
             while(pow != 0){
