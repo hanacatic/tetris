@@ -11,6 +11,7 @@ char matrix_row = 3;
 char matrix_col = 3;
 char fig_bin_array[4] = {0,0,0,0};
 char brojac =0;
+char debouncing_counter = 11;
 
 void update_led(void){
     //Set LED states according to main matrix named 'matrix'.
@@ -25,8 +26,9 @@ void update_led(void){
 void __interrupt() prekid(void){
     if(TMR0IF && TMR0IE){
         INTCONbits.TMR0IF = 0;
-        TMR0 = 180;
+        TMR0 = 180;        
         if (brojac == 100){
+            debouncing_counter++;
             if(can_go_further(matrix, &matrix_row, fig_bin_array)){
                 go_down_1place(matrix, &matrix_row, fig_bin_array); update_led();
             }
@@ -38,42 +40,56 @@ void __interrupt() prekid(void){
         brojac++;
     }
     
-    if(IOCBN0&&IOCBF0){        
+    if(IOCBN0&&IOCBF0){
+        
         IOCBF0 = 0;
         IOCIF=0;
+        if(debouncing_counter>10){
+        debouncing_counter = 0;
+        }
         //do something to start the game
         
     }
     if(IOCBN1&&IOCBF1){
+        
         IOCBF1 = 0;
         IOCIF=0;
+        if(debouncing_counter>10){
         PORTDbits.RD7 = !PORTDbits.RD7;
         go_left(matrix, &matrix_row, &matrix_col, fig_bin_array);
-                
+        debouncing_counter = 0;
+        }
     }
+                
     if(IOCBN2&&IOCBF2){
         IOCBF2 = 0;
         IOCIF=0;
+        if(debouncing_counter>10){
         PORTDbits.RD7 = !PORTDbits.RD7;
         go_right(matrix, &matrix_row, &matrix_col, fig_bin_array);
+        debouncing_counter = 0;
+        }
+        
                 
     }
     if(IOCBN3&&IOCBF3){
         IOCBF3 = 0;
         IOCIF=0;
-        go_down_1place(matrix, &matrix_row, fig_bin_array);                        
+        if(debouncing_counter>10){
+        go_down_1place(matrix, &matrix_row, fig_bin_array);    
+        debouncing_counter = 0;
+        }
     }
     if(IOCBN4&&IOCBF4){
         IOCBF4 = 0;
         IOCIF=0;
+        if(debouncing_counter>10){
         PORTDbits.RD7 = !PORTDbits.RD7;
-        rotate(matrix, &matrix_row, &matrix_col, fig_bin_array);                        
+        rotate(matrix, &matrix_row, &matrix_col, fig_bin_array); 
+        debouncing_counter = 0;
+        }
     }
-    if(INTE && INTF){
-        PORTDbits.RD7 = !PORTDbits.RD7;
-        INTF = 0;
-    }
-    
+  
     
     
     
