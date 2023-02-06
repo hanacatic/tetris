@@ -120,15 +120,15 @@ __bit can_go_further(char* matrix, char* matrix_row, char* fig_bin_array);
  */
 void go_down_1place(char* matrix, char* matrix_row, char* fig_bin_array);
 
-void go_left(char* matrix, char* matrix_row, char* fig_bin_array);
+void go_left(char* matrix, char* matrix_row, char* matrix_col, char* fig_bin_array);
 
-void go_right(char* matrix, char* matrix_row, char* fig_bin_array);
+void go_right(char* matrix, char* matrix_row,char* matrix_col, char* fig_bin_array);
 
-void rotate(char* matrix, char* matrx_row, char* fig_bin_array);
+void rotate(char* matrix, char* matrx_row, char* matrix_col, char* fig_bin_array);
 
-__bit can_go_left(char* matrix, char* matrix_row, char* fig_bin_array);
+__bit can_go_left(char* matrix, char* matrix_row, char* matrix_col, char* fig_bin_array);
 
-__bit can_go_right(char* matrix, char* matrix_row, char* fig_bin_array);
+__bit can_go_right(char* matrix, char* matrix_row, char* matrix_col, char* fig_bin_array);
 
 #endif	/* XC_HEADER_TEMPLATE_H */
 
