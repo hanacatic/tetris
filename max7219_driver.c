@@ -12,9 +12,9 @@
 //default brightness
 unsigned char brt = 15;
 
-#define DATA RD2
-#define LOAD RD1
-#define CLK  RD0
+#define DATA RD6
+#define LOAD RD5
+#define CLK  RD4
 
 
 void MAX7219_initialization(void){
@@ -73,5 +73,4 @@ void MAX7219_update (void) {
     LOAD = 0;
 	
 }
-
 
