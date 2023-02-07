@@ -15,7 +15,7 @@ const char figures[7][4] =
 };
  
 char a = 4;
-char temp = 0, pow;
+char temp[4] = {0,0,0,0 }, pow;
 
 char random_number(char max_number){
         srand((a)); 
@@ -87,30 +87,56 @@ void go_left(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_arr
             fig_bin_array[3-i] = fig_bin_array[3-i]/2;
             matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] | (fig_bin_array[3-i]);
         }
-       *matrix_col ++;
+       *matrix_col++;
     }
 }
 __bit can_rotate(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_array){
     if(!*matrix_col && fig_bin_array[1]) return 0;
+    for(char i=0; i < 4; i++){
+            temp[i] = 0;
+        }
+    for(char i = 0; i < 4; i++){
+            for(char j = 0; j < 4; j++){
+                temp[3-i] = temp[3-i] * 2;
+                temp[3-i] = temp[3-i] | (fig_bin_array[j] & (1 << ((*matrix_col) +3- i)));
+            }
+            pow = (*matrix_col) - i;
+            while(pow != 0){
+                temp[3-i] = temp[3-i] / 2;
+                pow = pow - 1;
+            }
+            if((matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i])) & temp[3-i]) return 0;
+    }
     return 1;
 }
 void rotate(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_array){
     if(can_rotate(matrix, matrix_row, matrix_col, fig_bin_array)){
         for(char i=0; i < 4; i++){
-            temp = 0;
-            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]);
+            matrix[(*matrix_row)-i] = (matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i])) | temp[3-i];
+        } 
+        pow = 0;
+        char i=0;
+        while(!temp[3-i]) {
+            i++;
         }
-        for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 4; j++){
-                temp = temp * 2;
-                temp = temp | (fig_bin_array[j] & (1 << ((*matrix_col) + i)));
-            }
-            pow = *matrix_col;
-            while(pow != 0){
-                temp = temp * 2;
-                pow = pow - 1;
-            }
-            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] | temp;
+        while(i < 4){
+            fig_bin_array[3-pow] = temp[3-i]; 
+            pow++;
+            i++;
         }
+        while(pow < 4){
+            fig_bin_array[3-pow] = 0;
+            pow++;
+        }
+        /*pow = 0;
+        i = 1;
+        while(i){
+            for(char j= 0; j < 4; j++){
+                if(temp[j] & (1 << 0)) {i = 0; break;}
+                temp[j] /= 2;               
+            }
+            if(i) pow++;
+        }
+        (*matrix_col) = pow;*/
     }
 }
