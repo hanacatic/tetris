@@ -8,7 +8,7 @@
 
 char matrix[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 char matrix_row = 3;
-char matrix_col = 3;
+char matrix_col = 2;
 char fig_bin_array[4] = {0,0,0,0};
 char brojac =0;
 char debouncing_counter = 11;
@@ -34,6 +34,7 @@ void __interrupt() prekid(void){
             }
             else{
                 matrix_row = 3; prepare_new_figure(matrix, fig_bin_array);
+                matrix_col = 2;
             }
              brojac = 0;
         }
@@ -44,7 +45,7 @@ void __interrupt() prekid(void){
         
         IOCBF0 = 0;
         IOCIF=0;
-        if(debouncing_counter>10){
+        if(debouncing_counter>1){
         debouncing_counter = 0;
         }
         //do something to start the game
@@ -54,7 +55,7 @@ void __interrupt() prekid(void){
         
         IOCBF1 = 0;
         IOCIF=0;
-        if(debouncing_counter>10){
+        if(debouncing_counter>1){
         PORTDbits.RD7 = !PORTDbits.RD7;
         go_left(matrix, &matrix_row, &matrix_col, fig_bin_array);
         debouncing_counter = 0;
@@ -64,7 +65,7 @@ void __interrupt() prekid(void){
     if(IOCBN2&&IOCBF2){
         IOCBF2 = 0;
         IOCIF=0;
-        if(debouncing_counter>10){
+        if(debouncing_counter>1){
         PORTDbits.RD7 = !PORTDbits.RD7;
         go_right(matrix, &matrix_row, &matrix_col, fig_bin_array);
         debouncing_counter = 0;
@@ -75,7 +76,7 @@ void __interrupt() prekid(void){
     if(IOCBN3&&IOCBF3){
         IOCBF3 = 0;
         IOCIF=0;
-        if(debouncing_counter>10){
+        if(debouncing_counter>1){
         go_down_1place(matrix, &matrix_row, fig_bin_array);    
         debouncing_counter = 0;
         }
@@ -83,7 +84,7 @@ void __interrupt() prekid(void){
     if(IOCBN4&&IOCBF4){
         IOCBF4 = 0;
         IOCIF=0;
-        if(debouncing_counter>10){
+        if(debouncing_counter>1){
         PORTDbits.RD7 = !PORTDbits.RD7;
         rotate(matrix, &matrix_row, &matrix_col, fig_bin_array); 
         debouncing_counter = 0;
