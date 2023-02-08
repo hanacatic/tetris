@@ -140,3 +140,13 @@ void rotate(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_arra
         (*matrix_col) = pow;*/
     }
 }
+void remove_full_rows(char* matrix){
+    for(char i = 0; i<20; i++){
+        if(matrix[19-i]==255){
+            char j=19-i;
+            while(j != 0){
+                matrix[j]=matrix[j-1];
+                j--;
+            }i--;
+        }
+    }
