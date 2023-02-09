@@ -33,7 +33,7 @@ void __interrupt() prekid(void){
                 go_down_1place(matrix, &matrix_row, fig_bin_array); update_led();
             }
             else{
-                remove_full_rows(matrix);
+                remove_full_rows(matrix); update_led();
                 matrix_row = 3; prepare_new_figure(matrix, fig_bin_array);
                 matrix_col = 2;
             }
