@@ -13,28 +13,43 @@ const char figures[7][4][4] =
     {{0b00000000, 0b00001000, 0b00011000, 0b00010000}, {0b00000000, 0b00000000, 0b00011000, 0b00001100}, {0b00000000, 0b00001000, 0b00011000, 0b00010000}, {0b00000000, 0b00000000, 0b00011000, 0b00001100}},
     {{0b00000000, 0b00000000, 0b00001000, 0b00011100}, {0b00000000, 0b00001000, 0b00001100, 0b00001000}, {0b00000000, 0b00000000, 0b00011100, 0b00001000}, {0b00000000, 0b00001000, 0b00011000, 0b00001000}}
     
-    
-    
-    
-    
-    
-    
-    /*
-    {0b00000000, 0b00001000, 0b00001000, 0b00011000}, //J
-    {0b00000000, 0b00010000, 0b00010000, 0b00011000}, //L
-    {0b00010000, 0b00010000, 0b00010000, 0b00010000}, //I
-    {0b00000000, 0b00000000, 0b00011000, 0b00011000}, //cube
-    {0b00000000, 0b00010000, 0b00011000, 0b00001000}, //4
-    {0b00000000, 0b00001000, 0b00011000, 0b00010000}, //z
-    {0b00000000, 0b00000000, 0b00010000, 0b00111000}, //inverted T
-     */
+ 
 };
  
 char a = 3;
 char temp[4] = {0,0,0,0 }, pow;
-char fig = 0;
+char figure = 0;
 char rotation = 0;
-char position = 0;
+signed char position = 0;
+
+void copy4 (char* array1, char* array2){
+    for(int i=0; i<4; i++)
+        array1[i] = array2[i];
+}
+
+__bit move(char* temp, char* rotatedFigure, char* position){
+    double x = 1;
+    signed char position2 = (*position);
+    copy4(temp, rotatedFigure);
+    
+    while(position2 > 0){
+        for(int i=0 ; i<4; i++){
+            if((temp[i] & (1<<7))) return 0;
+            temp[i] = temp[i]*2;
+        }
+        position2--;
+    }
+    while(position2 < 0){
+        for(int i=0 ; i<4; i++){
+            if((temp[i] & (1<<0))) return 0;
+            temp[i] = temp[i]/2;
+        }
+        position2++;
+    }
+    return 1;
+    
+}
+
 char random_number(char max_number){
         srand((a)); 
         a+=5;
@@ -44,10 +59,10 @@ char random_number(char max_number){
 
 
 void choose_new_figure(char* fig_bin_array){
-    fig = random_number(7);
+    figure = 2;//random_number(7);
     rotation = random_number(4);
     position = 0;
-    const char *pom = figures[fig][rotation];
+    const char *pom = figures[figure][rotation];
     for(char i=0; i<4; i++){
         fig_bin_array[i] = pom[i];
     }
@@ -75,24 +90,13 @@ __bit can_go_right(char* matrix, char* matrix_row, char *matrix_col, char* fig_b
     }
     return 1;
 }
-__bit can_go_right_rot(char* matrix, char* matrix_row, char* fig_bin_array){
-    for(int i = 0; i < 4; i++){
-        if(((matrix[*matrix_row - 3 + i] & (1<<7))) || ((matrix[*matrix_row - i] ^ fig_bin_array[3-i])&temp[3-i]*2)) return 0;
-    }
-    return 1;
-}
 __bit can_go_left(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_array){
     for(int i = 0; i < 4; i++){
         if((matrix[*matrix_row - 3 + i] & (1<<0)) || ((matrix[*matrix_row - i] ^ fig_bin_array[3-i])&fig_bin_array[3-i]/2)) return 0;
     }
     return 1;
 }
-__bit can_go_left_rot(char* matrix, char* matrix_row, char* fig_bin_array){
-    for(int i = 0; i < 4; i++){
-        if((matrix[*matrix_row - 3 + i] & (1<<0)) || ((matrix[*matrix_row - i] ^ fig_bin_array[3-i])&temp[3-i]/2)) return 0;
-    }
-    return 1;
-}
+
 void go_down_1place(char* matrix, char* matrix_row, char* fig_bin_array){
     for(char i=0; i<4; i++){
         matrix[(*matrix_row)+1-i] = matrix[(*matrix_row)+1-i] | (fig_bin_array[3-i]);
@@ -111,15 +115,7 @@ void go_right(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_ar
         position++;
     }
 }
-void go_right_rot(char* matrix, char* matrix_row, char* fig_bin_array){
-    if(can_go_right_rot(matrix, matrix_row, fig_bin_array)){
-        for(char i=0; i<4; i++){
-            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]);
-            temp[3-i] = temp[3-i]*2;
-            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] | (temp[3-i]);
-        }
-    }
-}
+
 void go_left(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_array){
     if(can_go_left(matrix, matrix_row, matrix_col, fig_bin_array)){
         for(char i=0; i<4; i++){
@@ -130,44 +126,25 @@ void go_left(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_arr
         position--;
     }
 }
-void go_left_rot(char* matrix, char* matrix_row, char* fig_bin_array){
-    if(can_go_left_rot(matrix, matrix_row, fig_bin_array)){
-        for(char i=0; i<4; i++){
-            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]);
-            temp[3-i] = temp[3-i]/2;
-            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] | (temp[3-i]);
-        }
-    }
-}
-__bit can_rotate(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_array){
-    if(!*matrix_col && fig_bin_array[1]) return 0;
-    rotation++;
-    for(char i=0; i < 4; i++){
-            temp[i] = figures[fig][rotation%4][i];
-    }
-    char pos = position;
-    while(pos > 0){
-        if(pos == position) go_right_rot(matrix, matrix_row, fig_bin_array);
-        else go_right_rot(matrix, matrix_row, temp);
-        pos--;
-    }
-    while(pos < 0){
-        if(pos == position) go_left_rot(matrix, matrix_row, fig_bin_array);
-        else go_left_rot(matrix, matrix_row, temp);
-        pos++;
-    }
-    for(char i = 0; i < 4; i++){
-        if((matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i])) & temp[3-i]) return 0;
-    }
-    return 1;
+
+__bit can_rotate(char* matrix, char* matrix_row, char* fig_bin_array, char* temp){
+    for(int i=0; i<4; i++)
+        if(temp[3 - i] & (matrix[(*matrix_row) - i] ^ fig_bin_array[3 - i]))return 0;
+    
+    
 }
 void rotate(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_array){
-    if(can_rotate(matrix, matrix_row, matrix_col, fig_bin_array)){
-        for(char i=0; i < 4; i++){
-            matrix[(*matrix_row)-i] = (matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i])) | temp[3-i];
-            fig_bin_array[3-i] = temp[3-i];
+    //if(can_rotate(matrix, matrix_row, matrix_col, fig_bin_array)){
+    char rotation2 = (rotation+1)%4;
+    if(move(temp, figures[figure][rotation2], &position))
+        if(can_rotate(matrix, matrix_row, fig_bin_array, temp)){
+            for(int i=0; i<4; i++){
+                matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]);
+                fig_bin_array[3-i] = temp[3-i];
+                matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] | (fig_bin_array[3-i]);
+            }
+            rotation = rotation2;
         }
-    }
 }
 void remove_full_rows(char* matrix){
     for(char i = 0; i<20; i++){
