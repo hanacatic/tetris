@@ -62,7 +62,8 @@ void __interrupt() prekid(void){
         IOCBF1 = 0;
         IOCIF=0;
         if(start_game == 0){
-            start_game = 1;            
+            start_game = 1; 
+            prepare_new_figure(matrix, fig_bin_array, randomizer);
         }else{
         if(debouncing_counter>1){
         PORTDbits.RD7 = !PORTDbits.RD7;
@@ -144,7 +145,7 @@ void main (void) {
     PORTDbits.RD7 = 1;
     tmr0_initialization();
     ioc_initialization();
-    prepare_new_figure(matrix, fig_bin_array, randomizer);
+    //prepare_new_figure(matrix, fig_bin_array, randomizer);
     MAX7219_initialization();
     
     // main loop
