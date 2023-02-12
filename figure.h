@@ -18,7 +18,7 @@
     </code>
     <p><b>Remarks: </b>Function returns pseudorandom number</p>
  */
-char random_number(char max_number);
+char random_number(char max_number, char x);
 
 
 
@@ -36,7 +36,7 @@ char random_number(char max_number);
     </code>
     <p><b>Remarks:</b></p>
  */
-void choose_new_figure(char* fig_bin_array);
+void choose_new_figure(char* fig_bin_array, char x);
 
 
 /**
@@ -53,7 +53,7 @@ void choose_new_figure(char* fig_bin_array);
     </code>
     <p><b>Remarks:</b>'matrix' is not real matrix, its actually array with each element represents row on LED matrix display </p>
  */
-void prepare_new_figure(char* matrix, char* fig_bin_array);
+void prepare_new_figure(char* matrix, char* fig_bin_array, char x);
 
 
 /**
