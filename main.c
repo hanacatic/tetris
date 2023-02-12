@@ -35,7 +35,6 @@ void __interrupt() prekid(void){
             else{
                 remove_full_rows(matrix); update_led();
                 matrix_row = 3; prepare_new_figure(matrix, fig_bin_array);
-                matrix_col = 2;
             }
              brojac = 0;
         }
@@ -138,7 +137,6 @@ void main (void) {
     prepare_new_figure(matrix, fig_bin_array);
     MAX7219_initialization();
     
-	
     // main loop
     while (1);
     
