@@ -50,17 +50,17 @@ __bit move(char* temp, char* rotatedFigure, char* position){
     
 }
 
-char random_number(char max_number){
-        srand((a)); 
-        a+=5;
-        a *= rand();
-        return (a)%max_number;    
+char random_number(char max_number, char x){
+        srand((x)); 
+        x+=5;
+        x *= rand();
+        return (x)%max_number;    
 }
 
 
-void choose_new_figure(char* fig_bin_array){
-    figure = random_number(7);
-    rotation = random_number(4);
+void choose_new_figure(char* fig_bin_array, char x){
+    figure = random_number(7,x);
+    rotation = random_number(4,x);
     position = 0;
     const char *pom = figures[figure][rotation];
     for(char i=0; i<4; i++){
@@ -69,8 +69,8 @@ void choose_new_figure(char* fig_bin_array){
     
 }
 
-void prepare_new_figure(char* matrix, char* fig_bin_array){
-    choose_new_figure(fig_bin_array);
+void prepare_new_figure(char* matrix, char* fig_bin_array, char x){
+    choose_new_figure(fig_bin_array, x);
     for(char i=0; i<4; i++)
         matrix[i] = fig_bin_array[i];
 }
