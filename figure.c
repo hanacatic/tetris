@@ -59,7 +59,7 @@ char random_number(char max_number){
 
 
 void choose_new_figure(char* fig_bin_array){
-    figure = 2;//random_number(7);
+    figure = random_number(7);
     rotation = random_number(4);
     position = 0;
     const char *pom = figures[figure][rotation];
