@@ -12,6 +12,8 @@ char matrix_col = 2;
 char fig_bin_array[4] = {0,0,0,0};
 char brojac =0;
 char debouncing_counter = 11;
+__bit start_game = 0;
+char randomizer = 1;
 
 void update_led(void){
     //Set LED states according to main matrix named 'matrix'.
@@ -23,10 +25,13 @@ void update_led(void){
 }
 
 
+
 void __interrupt() prekid(void){
     if(TMR0IF && TMR0IE){
         INTCONbits.TMR0IF = 0;
-        TMR0 = 180;        
+        TMR0 = 180;
+        randomizer++;
+        if(start_game == 1){
         if (brojac == 100){
             debouncing_counter++;
             if(can_go_further(matrix, &matrix_row, fig_bin_array)){
@@ -34,11 +39,12 @@ void __interrupt() prekid(void){
             }
             else{
                 remove_full_rows(matrix); update_led();
-                matrix_row = 3; prepare_new_figure(matrix, fig_bin_array);
+                matrix_row = 3; prepare_new_figure(matrix, fig_bin_array, randomizer);
             }
              brojac = 0;
         }
         brojac++;
+        }
     }
     
     if(IOCBN0&&IOCBF0){
@@ -55,11 +61,15 @@ void __interrupt() prekid(void){
         
         IOCBF1 = 0;
         IOCIF=0;
+        if(start_game == 0){
+            start_game = 1;            
+        }else{
         if(debouncing_counter>1){
         PORTDbits.RD7 = !PORTDbits.RD7;
         go_left(matrix, &matrix_row, &matrix_col, fig_bin_array);
         debouncing_counter = 0;
         }
+     }
     }
                 
     if(IOCBN2&&IOCBF2){
@@ -104,7 +114,7 @@ void tmr0_initialization(void){
     OPTION_REGbits.PSA = 0;
     OPTION_REGbits.TMR0CS = 0;
     TMR0 = 180;
-    INTCONbits.TMR0IE = 1;
+    INTCONbits.TMR0IE = 1; 
     //INTCONbits.GIE = 1;
 }
 void ioc_initialization(void){
@@ -134,7 +144,7 @@ void main (void) {
     PORTDbits.RD7 = 1;
     tmr0_initialization();
     ioc_initialization();
-    prepare_new_figure(matrix, fig_bin_array);
+    prepare_new_figure(matrix, fig_bin_array, randomizer);
     MAX7219_initialization();
     
     // main loop
