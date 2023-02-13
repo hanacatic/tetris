@@ -11,7 +11,7 @@ char matrix_row = 3;
 char matrix_col = 2;
 char fig_bin_array[4] = {0,0,0,0};
 char brojac =0;
-char debouncing_counter = 11;
+char debouncing_counter = 80;
 __bit start_game = 0;
 char randomizer = 1;
 
@@ -33,7 +33,7 @@ void __interrupt() prekid(void){
         randomizer++;
         if(start_game == 1){
         if (brojac == 100){
-            debouncing_counter++;
+            
             if(can_go_further(matrix, &matrix_row, fig_bin_array)){
                 go_down_1place(matrix, &matrix_row, fig_bin_array); update_led();
             }
@@ -44,6 +44,7 @@ void __interrupt() prekid(void){
              brojac = 0;
         }
         brojac++;
+        debouncing_counter++;
         }
     }
     
@@ -51,7 +52,7 @@ void __interrupt() prekid(void){
         
         IOCBF0 = 0;
         IOCIF=0;
-        if(debouncing_counter>1){
+        if(debouncing_counter>70){
         debouncing_counter = 0;
         }
         //do something to start the game
@@ -65,7 +66,7 @@ void __interrupt() prekid(void){
             start_game = 1; 
             prepare_new_figure(matrix, fig_bin_array, randomizer);
         }else{
-        if(debouncing_counter>1){
+        if(debouncing_counter>70){
         PORTDbits.RD7 = !PORTDbits.RD7;
         go_left(matrix, &matrix_row, &matrix_col, fig_bin_array);
         debouncing_counter = 0;
@@ -76,7 +77,7 @@ void __interrupt() prekid(void){
     if(IOCBN2&&IOCBF2){
         IOCBF2 = 0;
         IOCIF=0;
-        if(debouncing_counter>1){
+        if(debouncing_counter>70){
         PORTDbits.RD7 = !PORTDbits.RD7;
         go_right(matrix, &matrix_row, &matrix_col, fig_bin_array);
         debouncing_counter = 0;
@@ -87,15 +88,17 @@ void __interrupt() prekid(void){
     if(IOCBN3&&IOCBF3){
         IOCBF3 = 0;
         IOCIF=0;
-        if(debouncing_counter>1){
-        go_down_1place(matrix, &matrix_row, fig_bin_array);    
+        char x = 1;
+        if(debouncing_counter>70){
+        while(can_go_further(matrix, &matrix_row,fig_bin_array) && x < 20){go_down_1place(matrix, &matrix_row, fig_bin_array);x++;}
+        update_led();
         debouncing_counter = 0;
         }
     }
     if(IOCBN4&&IOCBF4){
         IOCBF4 = 0;
         IOCIF=0;
-        if(debouncing_counter>1){
+        if(debouncing_counter>70){
         PORTDbits.RD7 = !PORTDbits.RD7;
         rotate(matrix, &matrix_row, &matrix_col, fig_bin_array); 
         debouncing_counter = 0;
