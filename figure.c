@@ -53,6 +53,7 @@ __bit move(char* temp, char* rotatedFigure, signed char* position){
     
 }
 
+//implementation of the function choose_new_figure whose prototype is given in the figure.h header
 char random_number(char max_number, char x){
         srand((x)); 
         x+=5;
@@ -60,7 +61,7 @@ char random_number(char max_number, char x){
         return (x)%max_number;    
 }
 
-//implementation of the function move whose prototype is given in the figure.h header
+//implementation of the function choose_new_figure whose prototype is given in the figure.h header
 void choose_new_figure(char* fig_bin_array, char x){
     figure = random_number(7,x);
     rotation = random_number(4,x);
@@ -72,13 +73,14 @@ void choose_new_figure(char* fig_bin_array, char x){
     
 }
 
+//implementation of the function prepare_new_figure whose prototype is given in the figure.h header
 void prepare_new_figure(char* matrix, char* fig_bin_array, char x){
     choose_new_figure(fig_bin_array, x);
     for(char i=0; i<4; i++)
         matrix[i] = fig_bin_array[i];
 }
 
-
+//implementation of the function can_go_further whose prototype is given in the figure.h header
 __bit can_go_further(char* matrix, char* matrix_row, char* fig_bin_array){
     while(!matrix[(*matrix_row)]) (*matrix_row)--;
     for(int i = 1; i < 4; i++){
@@ -87,19 +89,29 @@ __bit can_go_further(char* matrix, char* matrix_row, char* fig_bin_array){
     return (*matrix_row) < 19 && !(fig_bin_array[3] & (matrix[(*matrix_row)+ 1])); 
 }
 
+//implementation of the function can_go_right whose prototype is given in the figure.h header
 __bit can_go_right(char* matrix, char* matrix_row, char* fig_bin_array ){
-    for(int i = 0; i < 4; i++){
-        if(((matrix[*matrix_row - 3 + i] & (1<<7))) || ((matrix[*matrix_row - i] ^ fig_bin_array[3-i])&fig_bin_array[3-i]*2)) return 0;
-    }
-    return 1;
-}
-__bit can_go_left(char* matrix, char* matrix_row,char* fig_bin_array){
-    for(int i = 0; i < 4; i++){
-        if((matrix[*matrix_row - 3 + i] & (1<<0)) || ((matrix[*matrix_row - i] ^ fig_bin_array[3-i])&fig_bin_array[3-i]/2)) return 0;
+    for(int i = 0; i < 4; i++){ 
+        if(((matrix[*matrix_row - 3 + i] & (1<<7))) || ((matrix[*matrix_row - i] ^ fig_bin_array[3-i])&fig_bin_array[3-i]*2)) return 0; //firstly checks if the figure has reached edge if so further moving it is an illegal move, secondly checks if there is collisions between moved figure and matrix (matrix without the original figure on it) - moving figure right in binary representation achieved by multiplying with 2 
     }
     return 1;
 }
 
+//implementation of the function can_go_left whose prototype is given in the figure.h header
+__bit can_go_left(char* matrix, char* matrix_row,char* fig_bin_array){
+    for(int i = 0; i < 4; i++){
+        if((matrix[*matrix_row - 3 + i] & (1<<0)) || ((matrix[*matrix_row - i] ^ fig_bin_array[3-i])&fig_bin_array[3-i]/2)) return 0; //firstly checks if the figure has reached edge if so further moving it is an illegal move, secondly checks if there is collisions between moved figure and matrix (matrix without the original figure on it) - moving figure left in binary representation achieved by dividing by 2 
+    }
+    return 1;
+}
+
+//implementation of the function can_rotate whose prototype is given in the figure.h header
+__bit can_rotate(char* matrix, char* matrix_row, char* fig_bin_array, char* temp){
+    for(int i=0; i<4; i++)
+        if(temp[3 - i] & (matrix[(*matrix_row) - i] ^ fig_bin_array[3 - i]))return 0;
+}
+
+//implementation of the function go_down_1place whose prototype is given in the figure.h header
 void go_down_1place(char* matrix, char* matrix_row, char* fig_bin_array){
     for(char i=0; i<4; i++){
         matrix[(*matrix_row)+1-i] = matrix[(*matrix_row)+1-i] | (fig_bin_array[3-i]);
@@ -108,6 +120,7 @@ void go_down_1place(char* matrix, char* matrix_row, char* fig_bin_array){
     (*matrix_row)++;
 }
 
+//implementation of the function go_right whose prototype is given in the figure.h header
 void go_right(char* matrix, char* matrix_row, char* fig_bin_array){
     if(can_go_right(matrix, matrix_row, fig_bin_array)){
         for(char i=0; i<4; i++){
@@ -119,6 +132,7 @@ void go_right(char* matrix, char* matrix_row, char* fig_bin_array){
     }
 }
 
+//implementation of the function go_left whose prototype is given in the figure.h header
 void go_left(char* matrix, char* matrix_row, char* fig_bin_array){
     if(can_go_left(matrix, matrix_row, fig_bin_array)){
         for(char i=0; i<4; i++){
@@ -130,12 +144,7 @@ void go_left(char* matrix, char* matrix_row, char* fig_bin_array){
     }
 }
 
-__bit can_rotate(char* matrix, char* matrix_row, char* fig_bin_array, char* temp){
-    for(int i=0; i<4; i++)
-        if(temp[3 - i] & (matrix[(*matrix_row) - i] ^ fig_bin_array[3 - i]))return 0;
-    
-    
-}
+//implementation of the function rotate whose prototype is given in the figure.h header
 void rotate(char* matrix, char* matrix_row, char* fig_bin_array){
     char rotation2 = (rotation+1)%4;
     if(move(temp, figures[figure][rotation2], &position))
@@ -148,6 +157,8 @@ void rotate(char* matrix, char* matrix_row, char* fig_bin_array){
             rotation = rotation2;
         }
 }
+
+//implementation of the function remove_full_rows whose prototype is given in the figure.h header
 void remove_full_rows(char* matrix){
     for(char i = 0; i<20; i++){
         if(matrix[19-i]==255){
