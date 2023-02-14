@@ -84,13 +84,13 @@ __bit can_go_further(char* matrix, char* matrix_row, char* fig_bin_array){
     return (*matrix_row) < 19 && !(fig_bin_array[3] & (matrix[(*matrix_row)+ 1])); 
 }
 
-__bit can_go_right(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_array ){
+__bit can_go_right(char* matrix, char* matrix_row, char* fig_bin_array ){
     for(int i = 0; i < 4; i++){
         if(((matrix[*matrix_row - 3 + i] & (1<<7))) || ((matrix[*matrix_row - i] ^ fig_bin_array[3-i])&fig_bin_array[3-i]*2)) return 0;
     }
     return 1;
 }
-__bit can_go_left(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_array){
+__bit can_go_left(char* matrix, char* matrix_row,char* fig_bin_array){
     for(int i = 0; i < 4; i++){
         if((matrix[*matrix_row - 3 + i] & (1<<0)) || ((matrix[*matrix_row - i] ^ fig_bin_array[3-i])&fig_bin_array[3-i]/2)) return 0;
     }
@@ -105,8 +105,8 @@ void go_down_1place(char* matrix, char* matrix_row, char* fig_bin_array){
     (*matrix_row)++;
 }
 
-void go_right(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_array){
-    if(can_go_right(matrix, matrix_row, matrix_col, fig_bin_array)){
+void go_right(char* matrix, char* matrix_row, char* fig_bin_array){
+    if(can_go_right(matrix, matrix_row, fig_bin_array)){
         for(char i=0; i<4; i++){
             matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]);
             fig_bin_array[3-i] = fig_bin_array[3-i]*2;
@@ -116,8 +116,8 @@ void go_right(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_ar
     }
 }
 
-void go_left(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_array){
-    if(can_go_left(matrix, matrix_row, matrix_col, fig_bin_array)){
+void go_left(char* matrix, char* matrix_row, char* fig_bin_array){
+    if(can_go_left(matrix, matrix_row, fig_bin_array)){
         for(char i=0; i<4; i++){
             matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]);
             fig_bin_array[3-i] = fig_bin_array[3-i]/2;
@@ -133,8 +133,7 @@ __bit can_rotate(char* matrix, char* matrix_row, char* fig_bin_array, char* temp
     
     
 }
-void rotate(char* matrix, char* matrix_row, char *matrix_col, char* fig_bin_array){
-    //if(can_rotate(matrix, matrix_row, matrix_col, fig_bin_array)){
+void rotate(char* matrix, char* matrix_row, char* fig_bin_array){
     char rotation2 = (rotation+1)%4;
     if(move(temp, figures[figure][rotation2], &position))
         if(can_rotate(matrix, matrix_row, fig_bin_array, temp)){
