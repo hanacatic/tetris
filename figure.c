@@ -16,7 +16,6 @@ const char figures[7][4][4] =
  
 };
  
-char a = 3; 
 char temp[4] = {0,0,0,0}; //temporary variable
 char figure = 0; //variable that tracks which of the seven figures is the current figure
 char rotation = 0; //variable that tracks which rotation of the figure is currently displayed or rather in which rotation is the figure
@@ -146,8 +145,8 @@ void go_left(char* matrix, char* matrix_row, char* fig_bin_array){
 
 //implementation of the function rotate whose prototype is given in the figure.h header
 void rotate(char* matrix, char* matrix_row, char* fig_bin_array){
-    char rotation2 = (rotation+1)%4;
-    if(move(temp, figures[figure][rotation2], &position))
+    char rotation2 = (rotation+1)%4; //updates which rotation of figure is to be considered
+    if(move(temp, figures[figure][rotation2], &position)) //moves rotation of figure to temporary variable in respect to position - how many times the figure had been moved left or right if possisble
         if(can_rotate(matrix, matrix_row, fig_bin_array, temp)){
             for(int i=0; i<4; i++){
                 matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]);
