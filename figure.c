@@ -16,7 +16,7 @@ const char figures[7][4][4] =
  
 };
  
-
+char a = 3; 
 char temp[4] = {0,0,0,0}; //temporary variable
 char figure = 0; //variable that tracks which of the seven figures is the current figure
 char rotation = 0; //variable that tracks which rotation of the figure is currently displayed or rather in which rotation is the figure
@@ -108,7 +108,7 @@ __bit can_go_left(char* matrix, char* matrix_row,char* fig_bin_array){
 //implementation of the function can_rotate whose prototype is given in the figure.h header
 __bit can_rotate(char* matrix, char* matrix_row, char* fig_bin_array, char* temp){
     for(int i=0; i<4; i++)
-        if(temp[3 - i] & (matrix[(*matrix_row) - i] ^ fig_bin_array[3 - i]))return 0;
+        if(temp[3 - i] & (matrix[(*matrix_row) - i] ^ fig_bin_array[3 - i]))return 0; //checks if there are collision between figures already on matrix (matrix when original figure is removed) and the rotated figure
 }
 
 //implementation of the function go_down_1place whose prototype is given in the figure.h header
@@ -122,25 +122,25 @@ void go_down_1place(char* matrix, char* matrix_row, char* fig_bin_array){
 
 //implementation of the function go_right whose prototype is given in the figure.h header
 void go_right(char* matrix, char* matrix_row, char* fig_bin_array){
-    if(can_go_right(matrix, matrix_row, fig_bin_array)){
+    if(can_go_right(matrix, matrix_row, fig_bin_array)){ //checks if the move is possible/legal
         for(char i=0; i<4; i++){
-            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]);
-            fig_bin_array[3-i] = fig_bin_array[3-i]*2;
-            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] | (fig_bin_array[3-i]);
+            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]); //removing current figure from matrix
+            fig_bin_array[3-i] = fig_bin_array[3-i]*2; //moving figure right, in binary representation, multiplying by 2
+            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] | (fig_bin_array[3-i]); //putting the figure on matrix, binary, bitwise
         }
-        position++;
+        position++; //updating position in case of rotation
     }
 }
 
 //implementation of the function go_left whose prototype is given in the figure.h header
 void go_left(char* matrix, char* matrix_row, char* fig_bin_array){
-    if(can_go_left(matrix, matrix_row, fig_bin_array)){
+    if(can_go_left(matrix, matrix_row, fig_bin_array)){ //checks if move is possible/legal
         for(char i=0; i<4; i++){
-            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]);
-            fig_bin_array[3-i] = fig_bin_array[3-i]/2;
-            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] | (fig_bin_array[3-i]);
+            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]); //removing current figure from matrix
+            fig_bin_array[3-i] = fig_bin_array[3-i]/2; //moving figure left, in binary representation, dividing by 2
+            matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] | (fig_bin_array[3-i]); //putting the figure on matrix, binary, bitwise
         }
-        position--;
+        position--; //updating position in case of rotation
     }
 }
 
