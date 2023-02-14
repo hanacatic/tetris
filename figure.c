@@ -147,13 +147,13 @@ void go_left(char* matrix, char* matrix_row, char* fig_bin_array){
 void rotate(char* matrix, char* matrix_row, char* fig_bin_array){
     char rotation2 = (rotation+1)%4; //updates which rotation of figure is to be considered
     if(move(temp, figures[figure][rotation2], &position)) //moves rotation of figure to temporary variable in respect to position - how many times the figure had been moved left or right if possisble
-        if(can_rotate(matrix, matrix_row, fig_bin_array, temp)){
+        if(can_rotate(matrix, matrix_row, fig_bin_array, temp)){ //checks if move legal/possible
             for(int i=0; i<4; i++){
-                matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]);
-                fig_bin_array[3-i] = temp[3-i];
-                matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] | (fig_bin_array[3-i]);
+                matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]); //removing current figure from matrix
+                fig_bin_array[3-i] = temp[3-i]; //updating figure
+                matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] | (fig_bin_array[3-i]); //putting the figure on matrix, binary, bitwise
             }
-            rotation = rotation2;
+            rotation = rotation2; //updated rotation variable
         }
 }
 
