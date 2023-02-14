@@ -16,7 +16,7 @@ const char figures[7][4][4] =
  
 };
  
-char a = 3; 
+
 char temp[4] = {0,0,0,0}; //temporary variable
 char figure = 0; //variable that tracks which of the seven figures is the current figure
 char rotation = 0; //variable that tracks which rotation of the figure is currently displayed or rather in which rotation is the figure
