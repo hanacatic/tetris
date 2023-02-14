@@ -144,7 +144,7 @@ __bit can_go_right(char* matrix, char* matrix_row, char* fig_bin_array);
 /**
     <p><b>Function prototype:</b>void go_right(char* matrix, char* matrix_row, char* fig_bin_array)</p>
   
-    <p><b>Summary:</b>Function that moves the figure on matrix one place rght.</p>
+    <p><b>Summary:</b>Function that moves the figure on matrix one place right.</p>
     <p><b>Description:</b>Function receives three char pointers. First pointer points to main matrix that represent LED display, second pointer points to variable that stores position on matrix of lowest figure point and the last pointer points to figure binary representation. Using these parameters function first calls function can_go_right and if its decision is true it moves the figure right.</p>
     <p><b>Precondition:</b>In order to move the figure left it must be possible to do so. Function will in any case check on its own if the move is possible.</p>
     <p><b>Parameters:</b>'matrix' - char pointer to 20 element array, 'matrix_row' - char pointer, 'fig_bin_array' - char pointer to 4 element array</p>
@@ -159,10 +159,27 @@ void go_right(char* matrix, char* matrix_row, char* fig_bin_array);
 
 
 /**
+    <p><b>Function prototype:</b>__bit can_rotate(char* matrix, char* matrix_row, char* fig_bin_array, char* temp)</p>
+  
+    <p><b>Summary:</b>Function that determines if rotation of figure is possible.</p>
+    <p><b>Description:</b>Function receives four char pointers. First pointer points to main matrix that represent LED display, second pointer points to variable that stores position on matrix of lowest figure point, third pointer points to figure binary representation and last pointer to binary representation of the figure. Using these parameters function determines if rotation is possible.</p>
+    <p><b>Precondition:</b>In order to move the figure left it must be possible to do so. Function will in any case check on its own if the move is possible.</p>
+    <p><b>Parameters:</b>'matrix' - char pointer to 20 element array, 'matrix_row' - char pointer, 'fig_bin_array' - char pointer to 4 element array</p>
+    <p><b>Returns:</b>__bit - decision on can_rotate</p>
+    <p><b>Example:</b></p>
+    <code>
+ 
+    </code>
+    <p><b>Remarks:</b></p>
+ */
+__bit can_rotate(char* matrix, char* matrix_row, char* fig_bin_array, char* temp);
+
+
+/**
     <p><b>Function prototype:</b>void rotate(char* matrix, char* matrx_row, char* fig_bin_array)</p>
   
     <p><b>Summary:</b>Function that rotates figure on matrix</p>
-    <p><b>Description:</b>Function receives three char pointers. First pointer points to main matrix that represent LED display, second pointer points to variable that stores position on matrix of lowest figure point and the last pointer points to figure binary representation. Using these parameters function decides if rotation is possible and if so rotates the figure.</p>
+    <p><b>Description:</b>Function receives three char pointers. First pointer points to main matrix that represent LED display, second pointer points to variable that stores position on matrix of lowest figure point and the last pointer points to figure binary representation. Using these parameters function decides if rotation is possible - calls function can_rotate and if so rotates the figure.</p>
     <p><b>Precondition:</b>In order to rotate the figure left it must be possible to do so. Function will in any case check on its own if the move is possible.</p>
     <p><b>Parameters:</b>'matrix' - char pointer to 20 element array, 'matrix_row' - char pointer, 'fig_bin_array' - char pointer to 4 element array</p>
     <p><b>Returns:</b>void</p>
