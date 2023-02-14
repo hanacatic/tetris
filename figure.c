@@ -27,7 +27,7 @@ void copy4 (char* array1, char* array2){
         array1[i] = array2[i];
 }
 
-__bit move(char* temp, char* rotatedFigure, char* position){
+__bit move(char* temp, char* rotatedFigure, signed char* position){
     double x = 1;
     signed char position2 = (*position);
     copy4(temp, rotatedFigure);
