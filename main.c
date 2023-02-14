@@ -26,48 +26,42 @@ void update_led(void){
 
 
 void __interrupt() prekid(void){
-    if(TMR0IF && TMR0IE){
+    if(TMR0IF && TMR0IE){ //interrupt on timer 0
         INTCONbits.TMR0IF = 0;
         TMR0 = 180;
-        randomizer++;
-        if(start_game == 1){
-        if (brojac == 100){
+        randomizer++; //changing randomizer value every time interrupt routine is done
+        if(start_game == 1){ //game starts only after start button was pressed
+        if (brojac == 100){ //after every 5ms game updates
             
             if(can_go_further(matrix, &matrix_row, fig_bin_array)){
-                go_down_1place(matrix, &matrix_row, fig_bin_array); update_led();
+                go_down_1place(matrix, &matrix_row, fig_bin_array); update_led(); //if a figure can go down a place it does
             }
             else{
-                remove_full_rows(matrix); update_led();
-                matrix_row = 3; prepare_new_figure(matrix, fig_bin_array, randomizer);
+                remove_full_rows(matrix); update_led(); //after figure has been dropped we check for any full rows
+                matrix_row = 3; prepare_new_figure(matrix, fig_bin_array, randomizer); //deploy new figure
             }
              brojac = 0;
         }
-        brojac++;
+        brojac++; //counter for timer
         debouncing_counter++;
         }
     }
     
-    if(IOCBN0&&IOCBF0){
-        
-        IOCBF0 = 0;
-        IOCIF=0;
-        if(debouncing_counter>70){
-        debouncing_counter = 0;
-        }
-        //do something to start the game
-        
-    }
+   
     if(IOCBN1&&IOCBF1){
         
         IOCBF1 = 0;
         IOCIF=0;
+        //first press initalizes the game
         if(start_game == 0){
             start_game = 1; 
             prepare_new_figure(matrix, fig_bin_array, randomizer);
+            //randomizer is used so every time the game starts it has a different sequence -
+            //which is calculated from time between starting the system and pressing the start button
         }else{
         if(debouncing_counter>70){
-        PORTDbits.RD7 = !PORTDbits.RD7;
-        go_left(matrix, &matrix_row, fig_bin_array);
+            //debouncing counter is made so only 1 press of butten within 3.5ms is recognized
+        go_left(matrix, &matrix_row, fig_bin_array); //after first press - button for moving left
         debouncing_counter = 0;
         }
      }
@@ -77,28 +71,31 @@ void __interrupt() prekid(void){
         IOCBF2 = 0;
         IOCIF=0;
         if(debouncing_counter>70){
-        PORTDbits.RD7 = !PORTDbits.RD7;
-        go_right(matrix, &matrix_row, fig_bin_array);
+            //debouncing counter is made so only 1 press of butten within 3.5ms is recognized
+        go_right(matrix, &matrix_row, fig_bin_array); //button for moving right
         debouncing_counter = 0;
         }
         
                 
     }
     if(IOCBN3&&IOCBF3){
+        //this button drops the figure as much as possible
         IOCBF3 = 0;
         IOCIF=0;
         char x = 1;
         if(debouncing_counter>70){
+            //debouncing counter is made so only 1 press of butten within 3.5ms is recognized
         while(can_go_further(matrix, &matrix_row,fig_bin_array) && x < 20){go_down_1place(matrix, &matrix_row, fig_bin_array);x++;}
         update_led();
         debouncing_counter = 0;
         }
     }
     if(IOCBN4&&IOCBF4){
+        //this button rotates the figure
         IOCBF4 = 0;
         IOCIF=0;
         if(debouncing_counter>70){
-        PORTDbits.RD7 = !PORTDbits.RD7;
+            //debouncing counter is made so only 1 press of butten within 3.5ms is recognized
         rotate(matrix, &matrix_row, fig_bin_array); 
         debouncing_counter = 0;
         }
@@ -121,15 +118,13 @@ void tmr0_initialization(void){
     //INTCONbits.GIE = 1;
 }
 void ioc_initialization(void){
- IOCBN0=1; // Omogucavanje prekida na rastucu ivicu na RB0 - Start
- IOCBF0=0;
- IOCBN1=1; // Omogucavanje prekida na rastucu ivicu na RB1 - Left
+ IOCBN1=1; // enables interrupt on change on rb1 - left
  IOCBF1=0;
- IOCBN2=1; // Omogucavanje prekida na rastucu ivicu na RB2 - Right
+ IOCBN2=1; // enables interrupt on change on rb2 - right
  IOCBF2=0;
- IOCBN3=1; //Omogucavanje prekida na rastucu ivicu na RB3 - drop down
+ IOCBN3=1; // enables interrupt on change on rb3 - drop down
  IOCBF3=0;
- IOCBN4=1; //Omogucavanje prekida na rastucu ivicu na RB4 - rotate
+ IOCBN4=1;  // enables interrupt on change on rb4 - rotate
  IOCBF4=0; 
  IOCIF=0;
  IOCIE=1;
