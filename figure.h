@@ -190,6 +190,20 @@ __bit can_rotate(char* matrix, char* matrix_row, char* fig_bin_array, char* temp
     <p><b>Remarks:</b></p>
  */
 void rotate(char* matrix, char* matrx_row, char* fig_bin_array);
+/**
+    <p><b>Function prototype:</b>void remove_full_rows(char* matrix)</p>
+  
+    <p><b>Summary:</b>Funcion that cleares any full rows</p>
+    <p><b>Description:</b>Function removes all full rows and drops the rows above for 1 row. In case there are multiple rows to delete, it will delete them all one by one from the last to the first and only after that can leds be updated.</p>
+    <p><b>Precondition:</b>There has to be a row which is full - meaning it consists of '11111111'</p>
+    <p><b>Parameters:</b>'matrix' - char pointer to 20 element array</p>
+    <p><b>Returns:</b>void</p>
+    <p><b>Example:</b></p>
+    <code>
+ 
+    </code>
+    <p><b>Remarks:</b></p>
+ */
 
 void remove_full_rows(char* matrix);
 
@@ -197,11 +211,11 @@ void remove_full_rows(char* matrix);
 /**
     <p><b>Function prototype:</b>__bit move(char* temp, char* rotatedFigure, signed char* position)</p>
   
-    <p><b>Summary:</b>Funcion that cleares any full rows</p>
-    <p><b>Description:</b>Function removes all full rows and drops the rows above for 1 row. In case there are multiple rows to delete, it will delete them all one by one from the last to the first and only after that can leds be updated.</p>
-    <p><b>Precondition:</b>There has to be a row which is full - meaning it consists of '11111111'</p>
-    <p><b>Parameters:</b>'matrix' - char pointer to 20 element array</p>
-    <p><b>Returns:</b>void</p>
+    <p><b>Summary:</b>Function that moves figure (needed because rotations are coded beforehand, but are placed on the center, this function moves those rotations of the figure left or right to where it is supposed to be, of course only if it is possible).
+    <p><b>Description:</b>Function receives three char pointers. First pointer points to a temporary variable will store rotated figure - binary representation of the figure, second pointer points to a variable that stores predefined rotation of the figure - the binary representation, and the last pointer points to the number of times figure was moved left and right. Using these parameters function moves figure left or right as many times as left and right buttons were clicked since the figure showed up.</p>
+    <p><b>Precondition:</b>In order to rotate the figure left it must be possible to do so. Function will in any case check on its own if rotation is possible.</p>
+    <p><b>Parameters:</b>'temp' - char pointer to 4 element array, 'rotatedFigure' - char pointer to 4 element array, 'position' - char pointer</p>
+    <p><b>Returns:</b>__bit - decision whether rotation is possible</p>
     <p><b>Example:</b></p>
     <code>
  
