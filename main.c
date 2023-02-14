@@ -8,7 +8,6 @@
 
 char matrix[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 char matrix_row = 3;
-char matrix_col = 2;
 char fig_bin_array[4] = {0,0,0,0};
 char brojac =0;
 char debouncing_counter = 80;
@@ -68,7 +67,7 @@ void __interrupt() prekid(void){
         }else{
         if(debouncing_counter>70){
         PORTDbits.RD7 = !PORTDbits.RD7;
-        go_left(matrix, &matrix_row, &matrix_col, fig_bin_array);
+        go_left(matrix, &matrix_row, fig_bin_array);
         debouncing_counter = 0;
         }
      }
@@ -79,7 +78,7 @@ void __interrupt() prekid(void){
         IOCIF=0;
         if(debouncing_counter>70){
         PORTDbits.RD7 = !PORTDbits.RD7;
-        go_right(matrix, &matrix_row, &matrix_col, fig_bin_array);
+        go_right(matrix, &matrix_row, fig_bin_array);
         debouncing_counter = 0;
         }
         
@@ -100,7 +99,7 @@ void __interrupt() prekid(void){
         IOCIF=0;
         if(debouncing_counter>70){
         PORTDbits.RD7 = !PORTDbits.RD7;
-        rotate(matrix, &matrix_row, &matrix_col, fig_bin_array); 
+        rotate(matrix, &matrix_row, fig_bin_array); 
         debouncing_counter = 0;
         }
     }
