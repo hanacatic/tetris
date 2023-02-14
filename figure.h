@@ -88,11 +88,11 @@ __bit can_go_further(char* matrix, char* matrix_row, char* fig_bin_array);
     <p><b>Remarks:</b>Function does not check whether figure can or cannot move down.</p>
  */
 void go_down_1place(char* matrix, char* matrix_row, char* fig_bin_array);
-void go_left(char* matrix, char* matrix_row, char* matrix_col, char* fig_bin_array);
-void go_right(char* matrix, char* matrix_row,char* matrix_col, char* fig_bin_array);
-void rotate(char* matrix, char* matrx_row, char* matrix_col, char* fig_bin_array);
-__bit can_go_left(char* matrix, char* matrix_row, char* matrix_col, char* fig_bin_array);
-__bit can_go_right(char* matrix, char* matrix_row, char* matrix_col, char* fig_bin_array);
+void go_left(char* matrix, char* matrix_row, char* fig_bin_array);
+void go_right(char* matrix, char* matrix_row, char* fig_bin_array);
+void rotate(char* matrix, char* matrx_row, char* fig_bin_array);
+__bit can_go_left(char* matrix, char* matrix_row, char* fig_bin_array);
+__bit can_go_right(char* matrix, char* matrix_row, char* fig_bin_array);
 void remove_full_rows(char* matrix);
 __bit move(char* temp, char* rotatedFigure, char* position);
 void copy4 (char* array1, char* array2);
