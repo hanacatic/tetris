@@ -16,37 +16,40 @@ const char figures[7][4][4] =
  
 };
  
-char a = 3;
-char temp[4] = {0,0,0,0 }, pow;
-char figure = 0;
-char rotation = 0;
-signed char position = 0;
+char a = 3; 
+char temp[4] = {0,0,0,0}; //temporary variable
+char figure = 0; //variable that tracks which of the seven figures is the current figure
+char rotation = 0; //variable that tracks which rotation of the figure is currently displayed or rather in which rotation is the figure
+signed char position = 0; //variable that tracks how many times figure was moved from the center line, left or right - fourth column from the right
 
+//implementation of the function copy4 whose prototype is given in the figure.h header
 void copy4 (char* array1, char* array2){
     for(int i=0; i<4; i++)
         array1[i] = array2[i];
 }
 
+//implementation of the function move whose prototype is given in the figure.h header
 __bit move(char* temp, char* rotatedFigure, signed char* position){
     double x = 1;
-    signed char position2 = (*position);
-    copy4(temp, rotatedFigure);
+    signed char position2 = (*position);  //temporary variable
+    copy4(temp, rotatedFigure); 
     
+    //position greater than zero indicates that figure had been moved to the left
     while(position2 > 0){
         for(int i=0 ; i<4; i++){
-            if((temp[i] & (1<<7))) return 0;
-            temp[i] = temp[i]*2;
+            if((temp[i] & (1<<7))) return 0; //tests if moving figure left is possible, if not function immediately stops and returns false, move not possible, move illegal
+            temp[i] = temp[i]*2; //move left, in binary representation this means multiply with 2
         }
         position2--;
     }
     while(position2 < 0){
         for(int i=0 ; i<4; i++){
-            if((temp[i] & (1<<0))) return 0;
-            temp[i] = temp[i]/2;
+            if((temp[i] & (1<<0))) return 0; //tests if moving figure right is possible, if not function immediately stops and returns false, move not possible, move illegal
+            temp[i] = temp[i]/2; //move right, in binary representation this means divide by 2
         }
         position2++;
     }
-    return 1;
+    return 1; //if test didn't fail by now move is possible
     
 }
 
@@ -57,7 +60,7 @@ char random_number(char max_number, char x){
         return (x)%max_number;    
 }
 
-
+//implementation of the function move whose prototype is given in the figure.h header
 void choose_new_figure(char* fig_bin_array, char x){
     figure = random_number(7,x);
     rotation = random_number(4,x);
