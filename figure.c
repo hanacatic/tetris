@@ -66,8 +66,7 @@ void choose_new_figure(char* fig_bin_array, char x){
     rotation = random_number(4,x); //takes random number between 0 and 3
     position = 0;
     const char *pom = figures[figure][rotation]; //chooses one random figure from figures
-    copy4(fig_bin_array, pom); //copy random figure to fig_bin_array
-    
+    for(char i=0; i<4; i++) fig_bin_array[i] = pom[i];  //copy random figure to fig_bin_array
 }
 
 //implementation of the function prepare_new_figure whose prototype is given in the figure.h header
