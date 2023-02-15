@@ -54,21 +54,19 @@ __bit move(char* temp, char* rotatedFigure, signed char* position){
 
 //implementation of the function choose_new_figure whose prototype is given in the figure.h header
 char random_number(char max_number, char x){
-        srand((x)); 
+        srand((x)); //using x as a random seed
         x+=5;
         x *= rand();
-        return (x)%max_number;    
+        return (x)%max_number;   //returns pseudo-random number between 0 and max_number
 }
 
 //implementation of the function choose_new_figure whose prototype is given in the figure.h header
 void choose_new_figure(char* fig_bin_array, char x){
-    figure = random_number(7,x);
-    rotation = random_number(4,x);
+    figure = random_number(7,x); //takes random number between 0 and 6
+    rotation = random_number(4,x); //takes random number between 0 and 3
     position = 0;
-    const char *pom = figures[figure][rotation];
-    for(char i=0; i<4; i++){
-        fig_bin_array[i] = pom[i];
-    }
+    const char *pom = figures[figure][rotation]; //chooses one random figure from figures
+    copy4(fig_bin_array, pom); //copy random figure to fig_bin_array
     
 }
 
@@ -76,16 +74,16 @@ void choose_new_figure(char* fig_bin_array, char x){
 void prepare_new_figure(char* matrix, char* fig_bin_array, char x){
     choose_new_figure(fig_bin_array, x);
     for(char i=0; i<4; i++)
-        matrix[i] = fig_bin_array[i];
+        matrix[i] = fig_bin_array[i]; //place choosen figure into first 4 rows of matrix
 }
 
 //implementation of the function can_go_further whose prototype is given in the figure.h header
 __bit can_go_further(char* matrix, char* matrix_row, char* fig_bin_array){
     while(!matrix[(*matrix_row)]) (*matrix_row)--;
     for(int i = 1; i < 4; i++){
-        if(fig_bin_array[3 - i] & (matrix[(*matrix_row)+ 1 - i] ^ fig_bin_array[3 - i + 1]))return 0;
+        if(fig_bin_array[3 - i] & (matrix[(*matrix_row)+ 1 - i] ^ fig_bin_array[3 - i + 1]))return 0; //checks for collision between figure and current state of matrix
     }
-    return (*matrix_row) < 19 && !(fig_bin_array[3] & (matrix[(*matrix_row)+ 1])); 
+    return (*matrix_row) < 19 && !(fig_bin_array[3] & (matrix[(*matrix_row)+ 1]));  //checks if figure is on bottom
 }
 
 //implementation of the function can_go_right whose prototype is given in the figure.h header
@@ -113,8 +111,8 @@ __bit can_rotate(char* matrix, char* matrix_row, char* fig_bin_array, char* temp
 //implementation of the function go_down_1place whose prototype is given in the figure.h header
 void go_down_1place(char* matrix, char* matrix_row, char* fig_bin_array){
     for(char i=0; i<4; i++){
-        matrix[(*matrix_row)+1-i] = matrix[(*matrix_row)+1-i] | (fig_bin_array[3-i]);
-        matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]);
+        matrix[(*matrix_row)+1-i] = matrix[(*matrix_row)+1-i] | (fig_bin_array[3-i]); //place current figure row into row below 
+        matrix[(*matrix_row)-i] = matrix[(*matrix_row)-i] ^ (fig_bin_array[3-i]); //remove current figure row from matrix
     }
     (*matrix_row)++;
 }
