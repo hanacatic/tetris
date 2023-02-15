@@ -205,7 +205,7 @@ void rotate(char* matrix, char* matrx_row, char* fig_bin_array);
     <p><b>Remarks:</b></p>
  */
 
-void remove_full_rows(char* matrix);
+void remove_full_rows(char* matrix, char* time);
 
 
 /**
