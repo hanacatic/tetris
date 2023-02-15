@@ -13,6 +13,8 @@ char brojac =0;
 char debouncing_counter = 80;
 __bit start_game = 0;
 char randomizer = 1;
+char time = 180;
+char reset = 0;
 
 void update_led(void){
     //Set LED states according to main matrix named 'matrix'.
@@ -28,7 +30,7 @@ void update_led(void){
 void __interrupt() prekid(void){
     if(TMR0IF && TMR0IE){ //interrupt on timer 0
         INTCONbits.TMR0IF = 0;
-        TMR0 = 180;
+        TMR0 = time;
         randomizer++; //changing randomizer value every time interrupt routine is done
         if(start_game == 1){ //game starts only after start button was pressed
         if (brojac == 100){ //after every 5ms game updates
@@ -37,13 +39,30 @@ void __interrupt() prekid(void){
                 go_down_1place(matrix, &matrix_row, fig_bin_array); update_led(); //if a figure can go down a place it does
             }
             else{
-                remove_full_rows(matrix); update_led(); //after figure has been dropped we check for any full rows
+                remove_full_rows(matrix, &time); update_led(); //after figure has been dropped we check for any full rows
                 matrix_row = 3; prepare_new_figure(matrix, fig_bin_array, randomizer); //deploy new figure
             }
              brojac = 0;
         }
         brojac++; //counter for timer
         debouncing_counter++;
+        }
+    }
+    if(IOCBN0&&IOCBF0){
+        IOCBF0 = 0;
+        IOCIF = 0;
+        if(start_game == 0){
+            start_game = 1;
+            prepare_new_figure(matrix, fig_bin_array, randomizer);
+            //randomizer is used so every time the game starts it has a different sequence -
+            //which is calculated from time between starting the system and pressing the start button
+        }
+        else{
+        PORTB = 0x00;
+        PORTD = 0x00;
+        for(int i = 0; i < 20; i++){
+            matrix[i] = 0;
+        }
         }
     }
     
@@ -53,17 +72,12 @@ void __interrupt() prekid(void){
         IOCBF1 = 0;
         IOCIF=0;
         //first press initalizes the game
-        if(start_game == 0){
-            start_game = 1; 
-            prepare_new_figure(matrix, fig_bin_array, randomizer);
-            //randomizer is used so every time the game starts it has a different sequence -
-            //which is calculated from time between starting the system and pressing the start button
-        }else{
+        
         if(debouncing_counter>70){
             //debouncing counter is made so only 1 press of butten within 3.5ms is recognized
         go_left(matrix, &matrix_row, fig_bin_array); //after first press - button for moving left
         debouncing_counter = 0;
-        }
+        
      }
     }
                 
@@ -113,7 +127,7 @@ void tmr0_initialization(void){
     OPTION_REGbits.PS0 = 0;
     OPTION_REGbits.PSA = 0;
     OPTION_REGbits.TMR0CS = 0;
-    TMR0 = 180;
+    TMR0 = time;
     INTCONbits.TMR0IE = 1; 
     //INTCONbits.GIE = 1;
 }
@@ -126,6 +140,8 @@ void ioc_initialization(void){
  IOCBF3=0;
  IOCBN4=1;  // enables interrupt on change on rb4 - rotate
  IOCBF4=0; 
+ IOCBN0 = 1; // enables interrupt on change on rb0 - start/reset
+ IOCBF0 = 0;
  IOCIF=0;
  IOCIE=1;
  GIE=1;
