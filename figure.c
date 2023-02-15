@@ -155,9 +155,10 @@ void rotate(char* matrix, char* matrix_row, char* fig_bin_array){
 }
 
 //implementation of the function remove_full_rows whose prototype is given in the figure.h header
-void remove_full_rows(char* matrix){
+void remove_full_rows(char* matrix, char* time){
     for(char i = 0; i<20; i++){ //goes through every row of matrix bottom to top
         if(matrix[19-i]==255){ //if row is full
+            (*time) = ((*time)+2)%256; // increases game speed
             char j=19-i; //row j is full
             while(j != 0){ //move all rows above j one down one by one
                 matrix[j]=matrix[j-1];
