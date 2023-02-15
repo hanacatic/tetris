@@ -54,11 +54,12 @@ void __interrupt() prekid(void){
         if(start_game == 0){
             start_game = 1;
             prepare_new_figure(matrix, fig_bin_array, randomizer);
-            time =180;
+            
             //randomizer is used so every time the game starts it has a different sequence -
             //which is calculated from time between starting the system and pressing the start button
         }
         else{
+        time =180;
         PORTB = 0x00;
         PORTD = 0x00;
         for(int i = 0; i < 20; i++){
