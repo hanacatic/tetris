@@ -194,7 +194,7 @@ void rotate(char* matrix, char* matrx_row, char* fig_bin_array);
     <p><b>Function prototype:</b>void remove_full_rows(char* matrix)</p>
   
     <p><b>Summary:</b>Funcion that cleares any full rows</p>
-    <p><b>Description:</b>Function removes all full rows and drops the rows above for 1 row. In case there are multiple rows to delete, it will delete them all one by one from the last to the first and only after that can leds be updated.</p>
+    <p><b>Description:</b>Function removes all full rows and drops the rows above for 1 row. In case there are multiple rows to delete, it will delete them all one by one from the last to the first and only after that can leds be updated. Also speeds up the game each time a row is cleared</p>
     <p><b>Precondition:</b>There has to be a row which is full - meaning it consists of '11111111'</p>
     <p><b>Parameters:</b>'matrix' - char pointer to 20 element array</p>
     <p><b>Returns:</b>void</p>
