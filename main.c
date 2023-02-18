@@ -51,14 +51,16 @@ void __interrupt() prekid(void){
     if(IOCBN0&&IOCBF0){
         IOCBF0 = 0;
         IOCIF = 0;
+                //first press initalizes the game
         if(start_game == 0){
             start_game = 1;
-            prepare_new_figure(matrix, fig_bin_array, randomizer);
+            prepare_new_figure(matrix, fig_bin_array, randomizer); //create the first figure
             
             //randomizer is used so every time the game starts it has a different sequence -
             //which is calculated from time between starting the system and pressing the start button
         }
         else{
+            //reset game
         time =180;
         PORTB = 0x00;
         PORTD = 0x00;
@@ -73,7 +75,6 @@ void __interrupt() prekid(void){
         
         IOCBF1 = 0;
         IOCIF=0;
-        //first press initalizes the game
         
         if(debouncing_counter>70){
             //debouncing counter is made so only 1 press of butten within 3.5ms is recognized
